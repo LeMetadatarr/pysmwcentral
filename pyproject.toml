@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pysmwcentral"
+dynamic = ["version"]
+description = "Python client for the smwcentral.net public JSON API"
+license = { text = "Apache-2.0" }
+authors = [{ name = "JarbasAi", email = "jarbasai@mailfence.com" }]
+requires-python = ">=3.8"
+dependencies = [
+    "requests",
+    "unblock_requests",
+]
+
+[project.optional-dependencies]
+stealth = ["curl-cffi"]
+test = ["pytest", "pytest-recording", "vcrpy"]
+
+[project.urls]
+Homepage = "https://github.com/TigreGotico/pysmwcentral"
+
+[tool.pytest.ini_options]
+markers = [
+    "live: hits the live smwcentral.net API (deselect with -m 'not live')",
+]
+
+[tool.setuptools.dynamic]
+version = { attr = "pysmwcentral.version.__version__" }
+
+[tool.setuptools.packages.find]
+include = ["pysmwcentral*"]
