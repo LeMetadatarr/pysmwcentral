@@ -9,6 +9,17 @@ description = "Python client for the smwcentral.net public JSON API"
 license = { text = "Apache-2.0" }
 authors = [{ name = "JarbasAi", email = "jarbasai@mailfence.com" }]
 requires-python = ">=3.8"
+classifiers = [
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
 dependencies = [
     "requests",
     "unblock_requests",
@@ -21,6 +32,8 @@ test = ["pytest", "pytest-recording", "vcrpy"]
 
 [project.urls]
 Homepage = "https://github.com/TigreGotico/pysmwcentral"
+Repository = "https://github.com/TigreGotico/pysmwcentral"
+Issues = "https://github.com/TigreGotico/pysmwcentral/issues"
 
 [tool.pytest.ini_options]
 markers = [

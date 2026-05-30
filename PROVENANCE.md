@@ -20,8 +20,7 @@ link; following it is left to the caller and subject to the site's terms.
 ## Canonical id
 
 Every record carries the canonical `smwcentral_id` (the numeric file id). It is
-the anchor for the metadatarr `ExternalIds.extra` dict (`hack_to_extra`) and the
-join key for derived datasets.
+the anchor key for `hack_to_extra` and the join key for derived datasets.
 
 ## Licensing
 

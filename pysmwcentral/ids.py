@@ -1,9 +1,9 @@
-"""metadatarr integration helpers for SMW Central objects.
+"""External-ID helpers for SMW Central objects.
 
-These functions convert :class:`~pysmwcentral.models.Hack` instances into flat
-``extra`` dicts compatible with the ``ExternalIds.extra`` field used across the
-metadatarr pipeline.  Keys are namespaced with ``smwcentral_`` and anchored on
-the canonical ``smwcentral_id``.
+These functions convert :class:`~pysmwcentral.models.Hack` instances into a flat
+``str -> str`` dict of namespaced external IDs anchored on the canonical
+``smwcentral_id``.  Keys are namespaced with ``smwcentral_`` and can be used
+for cross-referencing across data sources.
 """
 from __future__ import annotations
 
@@ -35,7 +35,11 @@ def id_from_url(url: str) -> Optional[str]:
 
 
 def hack_to_extra(hack: Hack) -> dict:
-    """Convert a :class:`~pysmwcentral.models.Hack` to a metadatarr extra dict.
+    """Convert a :class:`~pysmwcentral.models.Hack` to a flat external-ID dict.
+
+    Returns a flat ``str -> str`` dict of namespaced external IDs anchored on
+    ``smwcentral_id``, suitable for cross-referencing this record across data
+    sources.
 
     Keys written:
 

@@ -19,9 +19,8 @@ section in memory.
 | --- | --- | --- | --- |
 | `hacks` | `getsectionlist` (any section) | `smwcentral_id` | name, authors, type, difficulty, length, rating, downloads, tags, dates |
 
-Every row carries `smwcentral_id`, so rows stay anchored to metadatarr's
-dominant-ID chain. Pick the section with `section=` (`smwhacks`, `sm64hacks`,
-`yihacks`, ...).
+Every row carries `smwcentral_id` as a stable join key for cross-referencing.
+Pick the section with `section=` (`smwhacks`, `sm64hacks`, `yihacks`, ...).
 
 ## Streaming rows
 
@@ -52,7 +51,7 @@ Each row is a flat, JSON-serialisable dict:
   "moderated_at": 1779976938,
   "url": "https://www.smwcentral.net/?p=section&a=details&id=42415",
   "download_url": "https://dl.smwcentral.net/42415/Super%20Alex%20Demo.zip",
-  "extra": {"smwcentral_id": "42415", "...": "..."}
+  "extra": {"smwcentral_id": "42415", "smwcentral_url": "...", "..."}
 }
 ```
 

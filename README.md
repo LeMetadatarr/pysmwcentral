@@ -44,7 +44,7 @@ for hack in pysmwcentral.search("kaizo", section="smwhacks", max_hacks=20):
 import json
 print(json.dumps(hack.as_dict, indent=2))
 
-# metadatarr extra dict (anchored on smwcentral_id)
+# Flat external-ID dict anchored on smwcentral_id
 print(pysmwcentral.hack_to_extra(hack))
 ```
 
@@ -57,7 +57,7 @@ print(pysmwcentral.hack_to_extra(hack))
 | `iter_hacks(section, max_hacks)` | Iterate every entry across pages |
 | `search(query, section, max_hacks)` | Client-side name/tag filter |
 | `get_hack(id)` / `find_hack(id)` | Look up one file by id |
-| `hack_to_extra(hack)` | Flat `smwcentral_*` dict for metadatarr |
+| `hack_to_extra(hack)` | Flat `smwcentral_*` external-ID dict |
 | `id_from_url(url)` | Extract the file id from any smwcentral URL |
 | `set_delay(seconds)` | Adjust the inter-request delay |
 

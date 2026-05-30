@@ -21,7 +21,7 @@ pytest -m live                # one network smoke test
 
 Offline tests replay recorded `vcrpy` cassettes; no live call is made. `tests/conftest.py` forces the plain `requests` backend (`use_requests(True)`) so `vcrpy` can intercept. To re-record cassettes, delete them and run with `SMWC_TEST_DELAY=3` so recording stays under the site's HTTP 429 rate limit.
 
-> The shared env carries a broken third-party pytest plugin; run with `PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 -p pytest_vcr` if collection fails on unrelated plugins.
+> The shared env carries a broken third-party pytest plugin; run with `PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 -p pytest_recording -p vcr` if collection fails on unrelated plugins.
 
 ## Lint/Typecheck
 
@@ -34,7 +34,7 @@ No linter or type-checker is configured. Source uses `from __future__ import ann
 - `pysmwcentral/models.py` — `Hack`, `SectionList`, `Author` dataclasses. Each has `as_dict` and `from_api`. Section-specific attrs live in `Hack.fields` / `Hack.raw_fields`; common ones (`type`, `difficulty`, `length`, `demo`, `description`) are surfaced as properties.
 - `pysmwcentral/sections.py` — `list_section`, `browse`, `iter_hacks`, `search`, plus `SECTIONS`, `ORDER_BY`, `DIRECTIONS`.
 - `pysmwcentral/hack.py` — `get_hack` (raises on miss) / `find_hack` (returns `None`); uses `getfile&v=2`.
-- `pysmwcentral/ids.py` — `hack_to_extra` / `id_from_url`: bridge a `Hack` into the metadatarr `ExternalIds.extra` dict, anchored on `smwcentral_id`.
+- `pysmwcentral/ids.py` — `hack_to_extra` / `id_from_url`: produce a flat `str -> str` dict of namespaced external IDs (anchor key `smwcentral_id`) for cross-referencing across data sources.
 - `pysmwcentral/dataset.py` — HF dataset builder; config `hacks`, `iter_rows` / `export_jsonl`, plus a `python -m pysmwcentral.dataset` CLI.
 - `pysmwcentral/_clean.py` — internal string/number cleaning helpers.
 - `examples/` — runnable one-call scripts; `docs/` — usage docs; `PROVENANCE.md` — source/licence.

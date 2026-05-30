@@ -1,8 +1,9 @@
-# metadatarr integration
+# External IDs
 
-`pysmwcentral.ids` bridges a `Hack` into the metadatarr pipeline's
-`ExternalIds.extra` dict. Every key is namespaced `smwcentral_` and anchored on
-the canonical **`smwcentral_id`**.
+`pysmwcentral.ids` exposes helpers that convert a `Hack` into a flat
+``str -> str`` dict of namespaced external IDs anchored on the canonical
+**`smwcentral_id`**.  All keys are prefixed `smwcentral_`, making them
+unambiguous when merged with IDs from other data sources.
 
 ## `hack_to_extra(hack)`
 
@@ -27,9 +28,9 @@ extra = pysmwcentral.hack_to_extra(hack)
 # }
 ```
 
-All values are strings (the `extra` contract). Optional keys are omitted when
-the source value is empty, so `smwcentral_id` and `smwcentral_url` are always
-present and the rest are best-effort.
+All values are strings.  Optional keys are omitted when the source value is
+empty, so `smwcentral_id` and `smwcentral_url` are always present and the rest
+are best-effort.
 
 ## `id_from_url(url)`
 
@@ -44,6 +45,6 @@ pysmwcentral.id_from_url("https://dl.smwcentral.net/42415/Foo.zip")  # '42415'
 pysmwcentral.id_from_url("https://example.com/nope")                 # None
 ```
 
-This makes `smwcentral_id` a stable join key: enumerate with
+`smwcentral_id` is a stable join key: enumerate with
 [`iter_hacks`](pagination.md), key on `hack_to_extra(hack)["smwcentral_id"]`,
-and merge against other sources in the metadatarr id chain.
+and merge against other sources using that anchor.

@@ -1,4 +1,4 @@
-"""Build a metadatarr ExternalIds.extra dict from a hack."""
+"""Build a flat external-ID dict from a hack."""
 import json
 
 import pysmwcentral
