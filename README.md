@@ -64,6 +64,7 @@ print(pysmwcentral.hack_to_extra(hack))
 Sections: see `pysmwcentral.SECTIONS` (`smwhacks`, `sm64hacks`, `yihacks`, ...).
 
 See [docs/](docs/) for details and [examples/](examples/) for runnable scripts.
+The `ajax.php` endpoint is undocumented; see [docs/reverse-engineering.md](docs/reverse-engineering.md) for the observed action contracts.
 
 ## Dataset
 
