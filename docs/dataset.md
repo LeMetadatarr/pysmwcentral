@@ -1,15 +1,15 @@
 # Hugging Face dataset
 
 `pysmwcentral.dataset` flattens an SMW Central section into tabular rows, one
-Hugging Face dataset **config** per build. Each config is a streaming row
-flattener over [`iter_hacks`](sections.md) — it never materialises a whole
+Hugging Face dataset config per build. Each config is a streaming row
+flattener over [`iter_hacks`](sections.md). It never materializes a whole
 section in memory.
 
-> ## Provenance & licence (read this first)
+> ## Provenance and license (read this first)
 >
-> Rows carry **metadata only** — no ROM, patch, graphics, music, or image
-> binary is fetched or stored; `download_url` is the site's own link. Submissions
-> belong to their authors and SMW Central's terms apply. See
+> Rows carry metadata only. No ROM, patch, graphics, music, or image binary is
+> fetched or stored; `download_url` is the site's own link. Submissions belong
+> to their authors, and SMW Central's terms apply. See
 > [../PROVENANCE.md](../PROVENANCE.md). Credit SMW Central and the listed authors
 > in any dataset card, and keep the `smwcentral_id` / `url` anchor in every row.
 
@@ -31,7 +31,7 @@ for row in dataset.iter_rows("hacks", section="smwhacks", limit=100):
     print(row["smwcentral_id"], row["name"], row["type"])
 ```
 
-Each row is a flat, JSON-serialisable dict:
+Each row is a flat, JSON-serializable dict:
 
 ```json
 {
@@ -81,5 +81,8 @@ from pysmwcentral import dataset
 
 rows = list(dataset.iter_rows("hacks", section="smwhacks", limit=5000))
 ds = Dataset.from_list(rows)
-ds.push_to_hub("your-org/smwcentral-hacks", config_name="hacks")  # carry the licence in the card
+ds.push_to_hub("your-org/smwcentral-hacks", config_name="hacks")  # carry the license in the card
 ```
+
+---
+[← External IDs](external_ids.md) · [Home](README.md) · [Reverse-Engineering →](reverse-engineering.md)

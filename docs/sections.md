@@ -57,3 +57,6 @@ for hack in pysmwcentral.search("kaizo", section="smwhacks", max_hacks=25):
 
 For large sections, prefer ordering + `iter_hacks` and filter on the fields you
 care about, since `search` may page deep before it finds matches.
+
+---
+[← Quickstart](quickstart.md) · [Home](README.md) · [Hacks →](hacks.md)
