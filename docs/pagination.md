@@ -51,3 +51,6 @@ hammered, so raise the inter-request delay for large pulls:
 ```python
 pysmwcentral.set_delay(1.5)
 ```
+
+---
+[← Hacks](hacks.md) · [Home](README.md) · [External IDs →](external_ids.md)

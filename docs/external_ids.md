@@ -34,8 +34,8 @@ are best-effort.
 
 ## `id_from_url(url)`
 
-Recover the canonical id from any SMW Central URL — a file page or a direct
-download link:
+Recover the canonical id from any SMW Central URL, either a file page or a
+direct download link:
 
 ```python
 pysmwcentral.id_from_url(
@@ -48,3 +48,6 @@ pysmwcentral.id_from_url("https://example.com/nope")                 # None
 `smwcentral_id` is a stable join key: enumerate with
 [`iter_hacks`](pagination.md), key on `hack_to_extra(hack)["smwcentral_id"]`,
 and merge against other sources using that anchor.
+
+---
+[← Pagination](pagination.md) · [Home](README.md) · [Dataset →](dataset.md)

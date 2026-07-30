@@ -42,7 +42,7 @@ hack.url          # canonical file page URL
 > `sm64hacks` carries `video`. Read `hack.fields` / `hack.raw_fields` for
 > anything not surfaced as a property.
 
-### Serialise
+### Serialize
 
 ```python
 import json
@@ -56,6 +56,9 @@ hack = pysmwcentral.get_hack(42415)        # raises RuntimeError on a miss
 maybe = pysmwcentral.find_hack(999999999)  # returns None on a miss
 ```
 
-An unknown id makes the `getfile` action answer HTTP 404; `get_hack` converts
-that one status into `RuntimeError`, and `find_hack` returns `None`. Other HTTP
-errors propagate.
+An unknown id makes the `getfile` action answer HTTP 404. `get_hack` converts
+that one status into `RuntimeError`, and `find_hack` returns `None` instead.
+Other HTTP errors propagate.
+
+---
+[← Sections](sections.md) · [Home](README.md) · [Pagination →](pagination.md)

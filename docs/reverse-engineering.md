@@ -124,9 +124,9 @@ An unknown `id` answers HTTP 404.
 ```
 
 `fields` contains human-readable display values; `raw_fields` contains the
-machine-coded equivalents. Keys vary by section — `smwhacks` carries
-`type`/`difficulty`/`length`/`demo`/`description`; `sm64hacks` carries `video`;
-other sections may omit or rename keys.
+machine-coded equivalents. Keys vary by section: `smwhacks` carries
+`type`/`difficulty`/`length`/`demo`/`description`, `sm64hacks` carries `video`,
+and other sections may omit or rename keys.
 
 ---
 
@@ -134,5 +134,8 @@ other sections may omit or rename keys.
 
 No versioning is published. The endpoint has been stable in observed usage, but
 breaking changes are possible without notice. If `getsectionlist` returns an
-empty `data` array or `getfile` returns HTTP 404 / an object with no `id`,
+empty `data` array or `getfile` returns HTTP 404 or an object with no `id`,
 treat it as a miss rather than a bug.
+
+---
+[← Dataset](dataset.md) · [Home](README.md)

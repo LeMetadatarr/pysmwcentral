@@ -3,11 +3,11 @@
 Python client for the [smwcentral.net](https://www.smwcentral.net) public JSON API.
 
 SMW Central exposes a key-free JSON API through `ajax.php`. The `getsectionlist`
-action returns paginated section listings (Super Mario World / SM64 / Yoshi's
-Island hacks, music, graphics, patches, ...) and `getfile` returns a single file
-record. `pysmwcentral` wraps both in typed dataclasses with a polite,
-rate-limited HTTP transport and an optional `curl-cffi` browser-impersonation
-fallback.
+action returns paginated section listings (Super Mario World, SM64, and
+Yoshi's Island hacks, music, graphics, patches, and more) and `getfile` returns
+a single file record. `pysmwcentral` wraps both in typed dataclasses. It uses a
+rate-limited HTTP transport and offers an optional `curl-cffi`
+browser-impersonation fallback.
 
 ## Install
 
@@ -40,7 +40,7 @@ for hack in pysmwcentral.iter_hacks("sm64hacks", max_hacks=200):
 for hack in pysmwcentral.search("kaizo", section="smwhacks", max_hacks=20):
     print(hack)
 
-# Serialise
+# Serialize
 import json
 print(json.dumps(hack.as_dict, indent=2))
 
