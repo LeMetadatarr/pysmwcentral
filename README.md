@@ -76,6 +76,12 @@ hack, anchored on `smwcentral_id`. See [docs/dataset.md](docs/dataset.md) and
 python -m pysmwcentral.dataset hacks --section smwhacks --out hacks.jsonl --delay 1
 ```
 
+## Related projects
+
+- [pyromhacking](https://github.com/LeMetadatarr/pyromhacking) — client for romhacking.net (RHDN), the sibling ROM-hacking archive.
+- [metadatarr](https://github.com/LeMetadatarr/metadatarr) — cross-source metadata clients and entity resolver that these clients feed into.
+- [unblock_requests](https://github.com/LeMetadatarr/unblock_requests) — the `requests.Session` subclass this library uses for its default transport.
+
 ## License
 
 Apache-2.0
