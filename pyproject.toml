@@ -31,9 +31,9 @@ stealth = ["curl-cffi"]
 test = ["pytest", "pytest-recording", "vcrpy"]
 
 [project.urls]
-Homepage = "https://github.com/TigreGotico/pysmwcentral"
-Repository = "https://github.com/TigreGotico/pysmwcentral"
-Issues = "https://github.com/TigreGotico/pysmwcentral/issues"
+Homepage = "https://github.com/LeMetadatarr/pysmwcentral"
+Repository = "https://github.com/LeMetadatarr/pysmwcentral"
+Issues = "https://github.com/LeMetadatarr/pysmwcentral/issues"
 
 [tool.pytest.ini_options]
 markers = [
