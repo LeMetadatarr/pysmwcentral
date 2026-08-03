@@ -4,7 +4,7 @@ import json
 import pytest
 
 import pysmwcentral
-from pysmwcentral._clean import clean_tags, parse_length, to_float, to_int
+from pysmwcentral._clean import clean_or_none, clean_tags, parse_length, to_float, to_int
 from pysmwcentral.ids import hack_to_extra, id_from_url
 from pysmwcentral.models import Author, Hack, SectionList
 
@@ -52,6 +52,90 @@ class TestSections:
 
 
 # ---------------------------------------------------------------------------
+# Pagination (offline, no network)
+# ---------------------------------------------------------------------------
+
+class TestPagination:
+    def _pages(self, monkeypatch, pages):
+        """Monkeypatch sections.list_section to serve canned SectionList pages."""
+        from pysmwcentral import sections
+
+        def fake_list_section(section="smwhacks", page=1, order_by="date",
+                               direction="desc", moderated=0):
+            return pages[page - 1]
+
+        monkeypatch.setattr(sections, "list_section", fake_list_section)
+
+    def test_iter_hacks_walks_every_page(self, monkeypatch):
+        from pysmwcentral import sections
+
+        pages = [
+            SectionList(hacks=[Hack(id=1), Hack(id=2)], current_page=1, last_page=2),
+            SectionList(hacks=[Hack(id=3)], current_page=2, last_page=2),
+        ]
+        self._pages(monkeypatch, pages)
+        ids = [h.id for h in sections.iter_hacks()]
+        assert ids == [1, 2, 3]
+
+    def test_iter_hacks_stops_at_max_hacks(self, monkeypatch):
+        from pysmwcentral import sections
+
+        pages = [
+            SectionList(hacks=[Hack(id=1), Hack(id=2)], current_page=1, last_page=2),
+            SectionList(hacks=[Hack(id=3)], current_page=2, last_page=2),
+        ]
+        self._pages(monkeypatch, pages)
+        ids = [h.id for h in sections.iter_hacks(max_hacks=1)]
+        assert ids == [1]
+
+    def test_iter_hacks_resumes_from_start_page(self, monkeypatch):
+        from pysmwcentral import sections
+
+        pages = {
+            2: SectionList(hacks=[Hack(id=20)], current_page=2, last_page=2),
+        }
+
+        def fake_list_section(section="smwhacks", page=1, order_by="date",
+                               direction="desc", moderated=0):
+            return pages[page]
+
+        monkeypatch.setattr(sections, "list_section", fake_list_section)
+        ids = [h.id for h in sections.iter_hacks(start_page=2)]
+        assert ids == [20]
+
+    def test_iter_hacks_stops_on_empty_page(self, monkeypatch):
+        from pysmwcentral import sections
+
+        pages = [SectionList(hacks=[], current_page=1, last_page=5)]
+        self._pages(monkeypatch, pages)
+        assert list(sections.iter_hacks()) == []
+
+    def test_browse_is_alias_for_list_section(self, monkeypatch):
+        from pysmwcentral import sections
+
+        fake_page = SectionList(hacks=[Hack(id=1)], current_page=1, last_page=1)
+        monkeypatch.setattr(
+            sections, "list_section",
+            lambda section="smwhacks", page=1, order_by="date", direction="desc",
+            moderated=0: fake_page,
+        )
+        result = sections.browse()
+        assert result is fake_page
+
+    def test_search_filters_by_name_and_tags(self, monkeypatch):
+        from pysmwcentral import sections
+
+        fake = [
+            Hack(id=1, name="Kaizo World", tags=["hard"]),
+            Hack(id=2, name="Easy Ride", tags=["kaizo", "chill"]),
+            Hack(id=3, name="Something Else", tags=["music"]),
+        ]
+        monkeypatch.setattr(sections, "iter_hacks", lambda **kw: iter(fake))
+        matches = [h.id for h in sections.search("kaizo")]
+        assert matches == [1, 2]
+
+
+# ---------------------------------------------------------------------------
 # Single-hack lookup
 # ---------------------------------------------------------------------------
 
@@ -75,6 +159,57 @@ class TestHack:
     @pytest.mark.vcr()
     def test_find_missing_returns_none(self):
         assert pysmwcentral.find_hack(999999999) is None
+
+    def test_get_hack_404_raises_runtime_error(self, monkeypatch):
+        import requests
+
+        from pysmwcentral import hack, transport
+
+        def fake_get_json(action, params=None):
+            resp = requests.Response()
+            resp.status_code = 404
+            raise requests.HTTPError(response=resp)
+
+        monkeypatch.setattr(transport, "get_json", fake_get_json)
+        with pytest.raises(RuntimeError):
+            hack.get_hack(1)
+
+    def test_get_hack_non_404_http_error_propagates(self, monkeypatch):
+        import requests
+
+        from pysmwcentral import hack, transport
+
+        def fake_get_json(action, params=None):
+            resp = requests.Response()
+            resp.status_code = 500
+            raise requests.HTTPError(response=resp)
+
+        monkeypatch.setattr(transport, "get_json", fake_get_json)
+        with pytest.raises(requests.HTTPError):
+            hack.get_hack(1)
+
+    def test_get_hack_malformed_response_raises_runtime_error(self, monkeypatch):
+        from pysmwcentral import hack, transport
+
+        monkeypatch.setattr(transport, "get_json", lambda action, params=None: {"no": "id"})
+        with pytest.raises(RuntimeError):
+            hack.get_hack(1)
+
+    def test_get_hack_non_dict_response_raises_runtime_error(self, monkeypatch):
+        from pysmwcentral import hack, transport
+
+        monkeypatch.setattr(transport, "get_json", lambda action, params=None: None)
+        with pytest.raises(RuntimeError):
+            hack.get_hack(1)
+
+    def test_find_hack_swallows_value_error(self, monkeypatch):
+        from pysmwcentral import hack, transport
+
+        def fake_get_json(action, params=None):
+            raise ValueError("boom")
+
+        monkeypatch.setattr(transport, "get_json", fake_get_json)
+        assert hack.find_hack("not-an-id") is None
 
 
 # ---------------------------------------------------------------------------
@@ -158,6 +293,21 @@ class TestClean:
     def test_to_float(self):
         assert to_float("4") == 4.0
         assert to_float(None) == 0.0
+
+    def test_to_int_non_numeric_string_falls_back_to_default(self):
+        assert to_int("not a number") == 0
+        assert to_int("also-bad", default=-1) == -1
+
+    def test_to_float_non_numeric_string_falls_back_to_default(self):
+        assert to_float("not a number") == 0.0
+        assert to_float("also-bad", default=-1.0) == -1.0
+
+    def test_clean_or_none(self):
+        assert clean_or_none("  Standard  ") == "Standard"
+        assert clean_or_none("") is None
+        assert clean_or_none("n/a") is None
+        assert clean_or_none("Unknown") is None
+        assert clean_or_none("-") is None
 
 
 # ---------------------------------------------------------------------------
