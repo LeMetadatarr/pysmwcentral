@@ -9,6 +9,7 @@ build/
 venv/
 .env
 .pytest_cache/
+.coverage
 *.json
 *.csv
 *.nfo

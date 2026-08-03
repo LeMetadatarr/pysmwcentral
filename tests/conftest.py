@@ -12,6 +12,13 @@ def vcr_config():
         "record_mode": "once",
         "match_on": ["method", "scheme", "host", "path", "query"],
         "cassette_library_dir": "tests/cassettes",
+        # SMW Central serves brotli-encoded bodies (Content-Encoding: br).
+        # vcrpy does not run replayed bytes back through urllib3's content
+        # decoder, so without this the cassette stores the still-compressed
+        # body and every replay fails JSON-decoding it, regardless of
+        # whether the `brotli` package happens to be installed. Decoding at
+        # record time stores plain JSON in the cassette instead.
+        "decode_compressed_response": True,
     }
 
 

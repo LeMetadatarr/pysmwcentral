@@ -14,46 +14,45 @@ interactions:
     uri: https://www.smwcentral.net/ajax.php?a=getfile&v=2&id=999999999
   response:
     body:
-      string: !!binary |
-        iwGAbnVsbAM=
+      string: 'null'
     headers:
       CF-RAY:
-      - a039403edf980351-MAD
+      - a2514f7f0c29f77b-MAD
       Cache-Control:
       - no-cache, private
-      Cf-Cache-Status:
-      - DYNAMIC
       Connection:
       - keep-alive
-      Content-Encoding:
-      - br
       Content-Type:
       - application/json
       Date:
-      - Fri, 29 May 2026 23:24:09 GMT
+      - Mon, 03 Aug 2026 00:47:21 GMT
       Nel:
       - '{"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}'
       Permissions-Policy:
       - interest-cohort=()
       Report-To:
-      - '{"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=CzLNxM%2FgoyXRGVOuiFORliuhT1bQoc1Oq1hcgT7fsVXZYe4lf9%2BX3lpSaDQxHg7yrMJshwOtJ%2F%2BJ8Qf68xikMF1Y3FU5yaM4mOBhaVXh6G510TS%2BWe9aIIstWtA5YPZo%2FLKpXURVTU5wKmhcjxhwNEQ%3D"}]}'
+      - '{"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=fWLEIInKcQg1ljWUTbxOyn29GGqoU6unRuTgkNcg9tqFk8BUY6Fsv7K2wEwpTP9IMAzNSyrsTWcnSv6ZHO%2F99xY8EqDgBe7TSZhWwEbgqki5nfZwWtRznkBEUT99e0%2FNuf6JLTgUb7tFPWth0hsdoWQ%3D"}]}'
       Server:
       - cloudflare
       Set-Cookie:
-      - smwcentral_session=dU4eCfozDDwPs5voRTlDvXvfCOxv1iT3PUhBJfSh; expires=Sat,
-        30 May 2026 01:24:09 GMT; Max-Age=7200; path=/; secure; httponly
+      - smwcentral_session=U2mXUZ0YK4NcLjCurQS7NCKu1oXGhA7IuSuQqPNq; expires=Mon,
+        03 Aug 2026 02:47:21 GMT; Max-Age=7200; path=/; secure; httponly
       Transfer-Encoding:
       - chunked
       X-Content-Type-Options:
       - nosniff
       X-Frame-Options:
       - sameorigin
-      X-Ratelimit-Limit:
+      X-RateLimit-Limit:
       - '2'
-      X-Ratelimit-Remaining:
+      X-RateLimit-Remaining:
       - '1'
       alt-svc:
       - h3=":443"; ma=86400
+      cf-cache-status:
+      - DYNAMIC
+      content-length:
+      - '4'
     status:
       code: 404
       message: Not Found
