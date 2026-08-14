@@ -17,6 +17,28 @@ from pysmwcentral.sections import (
 from pysmwcentral.hack import get_hack, find_hack
 from pysmwcentral.ids import hack_to_extra, id_from_url
 
+
+def crawl(sections=None, *, seen=None, max_entries=0):
+    if sections is None:
+        sections = list(SECTIONS)
+    if seen is None:
+        seen = set()
+    yielded = 0
+    for section in sections:
+        for hack in iter_hacks(section):
+            if hack.id in seen:
+                continue
+            seen.add(hack.id)
+            try:
+                d = hack.as_dict()
+            except Exception:
+                continue
+            yield d
+            yielded += 1
+            if max_entries and yielded >= max_entries:
+                return
+
+
 __all__ = [
     "__version__",
     # transport
@@ -43,4 +65,6 @@ __all__ = [
     # ids
     "hack_to_extra",
     "id_from_url",
+    # crawl
+    "crawl",
 ]
