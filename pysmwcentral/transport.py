@@ -9,6 +9,7 @@ plain ``requests`` is blocked.
 """
 from __future__ import annotations
 
+import os
 import time
 from typing import Any, Dict, Optional
 
@@ -24,12 +25,12 @@ _HEADERS = {
 
 _session: Optional[Any] = None
 _last_request: float = 0.0
-_min_delay: float = 0.5
+_min_delay: float = 2.0
 _force_requests: bool = False
 
 
 def set_delay(seconds: float) -> None:
-    """Set the minimum delay between HTTP requests (default: 0.5 s)."""
+    """Set the minimum delay between HTTP requests (default: 2.0 s)."""
     global _min_delay
     _min_delay = max(0.0, seconds)
 
@@ -103,6 +104,43 @@ def _throttle() -> None:
     _last_request = time.time()
 
 
+def _try_proxies(method: str, url: str, **kwargs: Any) -> Any:
+    """Retry a rate-limited request through rotating proxies (anon_requests)."""
+    try:
+        from anon_requests import RotatingProxySession, ProxyType
+    except ImportError:
+        return None
+    import requests as _rq
+    try:
+        tries = int(os.environ.get("SMWC_PROXY_RETRIES", "5"))
+    except ValueError:
+        tries = 5
+    try:
+        rps = RotatingProxySession(proxy_type=ProxyType.SOCKS5, validate=True,
+                                   session_factory=_rq.Session)
+    except Exception:
+        return None
+    try:
+        rps.headers.update(get_session().headers)
+        for _ in range(max(1, tries)):
+            try:
+                r = rps.request(method, url, **kwargs)
+            except Exception:
+                continue
+            if r.status_code != 429:
+                return r
+    finally:
+        try:
+            rps.close()
+        except Exception:
+            pass
+    return None
+
+
+def _truthy(val: Optional[str]) -> bool:
+    return val is not None and val.strip().lower() in ("1", "true", "yes", "on")
+
+
 def get_json(action: str, params: Optional[Dict[str, Any]] = None) -> Any:
     """GET an ``ajax.php`` action and return the decoded JSON.
 
@@ -123,5 +161,21 @@ def get_json(action: str, params: Optional[Dict[str, Any]] = None) -> Any:
     query.update(params or {})
 
     resp = session.get(API_URL, params=query)
+    if resp.status_code == 429:
+        base_delay = 5.0
+        max_retries = 8
+        for attempt in range(max_retries):
+            delay = min(base_delay * (2 ** attempt), 300.0)
+            time.sleep(delay)
+            _throttle()
+            resp = session.get(API_URL, params=query)
+            if resp.status_code != 429:
+                break
+        else:
+            if _truthy(os.environ.get("SMWC_PROXY_ON_429")):
+                proxied = _try_proxies("GET", API_URL, params=query)
+                if proxied is not None:
+                    return proxied.json()
+            resp.raise_for_status()
     resp.raise_for_status()
     return resp.json()
